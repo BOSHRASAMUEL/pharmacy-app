@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | صيدلية د/ مصطفى مظلوم</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: radial-gradient(circle at top right, #fdfbfb 0%, #ebedee 100%);
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .admin-container {
+            background: #ffffff;
+            max-width: 550px;
+            width: 100%;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        .admin-header {
+            background: linear-gradient(135deg, #6A1B9A 0%, #4A148C 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .admin-header i { font-size: 2.5rem; color: #00BCD4; margin-bottom: 10px; display: block; }
+        .admin-header h1 { font-size: 1.8rem; font-weight: 700; }
+        .admin-header p { font-size: 1rem; opacity: 0.8; margin-top: 5px; }
+        .admin-body { padding: 40px 30px; }
+        .form-group { margin-bottom: 22px; text-align: right; }
+        .form-group label { display: block; font-weight: bold; color: #555; margin-bottom: 8px; font-size: 1rem; }
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .input-wrapper i { position: absolute; right: 15px; color: #777; font-size: 1.1rem; pointer-events: none; }
+        .form-control {
+            width: 100%;
+            padding: 14px 45px 14px 15px;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.05rem;
+            font-weight: bold;
+            border: 2px solid #eaeaea;
+            border-radius: 12px;
+            outline: none;
+            background-color: #fafafa;
+            transition: border-color 0.25s;
+            direction: ltr;
+            text-align: right;
+        }
+        .form-control:focus { border-color: #6A1B9A; background-color: #fff; }
+
+        /* كارد عدد الزيارات */
+        .visits-card {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background: linear-gradient(135deg, #6A1B9A 0%, #4A148C 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 20px 22px;
+            margin-bottom: 28px;
+            box-shadow: 0 6px 20px rgba(106, 27, 154, 0.2);
+        }
+        .visits-icon {
+            width: 54px; height: 54px;
+            background: rgba(0, 188, 212, 0.2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+            color: #00BCD4;
+            flex-shrink: 0;
+        }
+        .visits-info { flex: 1; }
+        .visits-label { font-size: 0.9rem; opacity: 0.8; margin-bottom: 4px; }
+        .visits-number { font-size: 2rem; font-weight: 700; color: #00BCD4; line-height: 1; }
+        .visits-sub { font-size: 0.8rem; opacity: 0.6; margin-top: 4px; }
+
+        /* فاصل بين الأقسام */
+        .section-divider {
+            border: none;
+            border-top: 2px dashed #eaeaea;
+            margin: 28px 0;
+        }
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+        }
+
+        /* ========= STATUS TOGGLE CARD ========= */
+        .status-section-label {
+            font-weight: bold;
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .status-toggle-card {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid #eaeaea;
+            margin-bottom: 25px;
+            transition: border-color 0.4s;
+        }
+        .status-toggle-card.is-open  { border-color: #25D366; }
+        .status-toggle-card.is-closed { border-color: #EA4335; }
+        .status-card-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 22px;
+            background: #f9f9f9;
+            transition: background 0.4s;
+        }
+        .status-toggle-card.is-open .status-card-inner   { background: #f0fdf6; }
+        .status-toggle-card.is-closed .status-card-inner { background: #fdf2f2; }
+        .status-info { display: flex; align-items: center; gap: 14px; }
+        .status-icon-circle {
+            width: 48px; height: 48px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem; flex-shrink: 0; transition: background 0.4s;
+        }
+        .status-toggle-card.is-open .status-icon-circle { background: rgba(37,211,102,0.15); color: #25D366; }
+        .status-toggle-card.is-closed .status-icon-circle { background: rgba(234,67,53,0.12); color: #EA4335; }
+        .status-text-group { line-height: 1.4; }
+        .status-main-text { font-size: 1.1rem; font-weight: 700; transition: color 0.4s; }
+        .status-toggle-card.is-open  .status-main-text { color: #1a8040; }
+        .status-toggle-card.is-closed .status-main-text { color: #9b1c1c; }
+        .status-sub-text { font-size: 0.85rem; color: #888; margin-top: 2px; }
+        .big-toggle-btn {
+            border: none; border-radius: 12px; padding: 10px 22px;
+            font-family: 'Tajawal', sans-serif; font-size: 0.95rem; font-weight: bold;
+            cursor: pointer; display: flex; align-items: center; gap: 8px;
+            transition: all 0.3s ease; flex-shrink: 0;
+        }
+        .status-toggle-card.is-open .big-toggle-btn { background-color: #EA4335; color: white; box-shadow: 0 4px 12px rgba(234,67,53,0.3); }
+        .status-toggle-card.is-open .big-toggle-btn:hover { background-color: #c53427; transform: translateY(-2px); }
+        .status-toggle-card.is-closed .big-toggle-btn { background-color: #25D366; color: white; box-shadow: 0 4px 12px rgba(37,211,102,0.3); }
+        .status-toggle-card.is-closed .big-toggle-btn:hover { background-color: #20ba5a; transform: translateY(-2px); }
+        .status-bar { height: 5px; transition: background 0.4s; }
+        .status-toggle-card.is-open .status-bar { background: linear-gradient(to left, #25D366, #1aad52); }
+        .status-toggle-card.is-closed .status-bar { background: linear-gradient(to left, #EA4335, #c53427); }
+        /* ====================================== */
+
+        .btn-submit {
+            width: 100%; padding: 15px; background-color: #00BCD4; color: white; border: none;
+            border-radius: 12px; font-family: 'Tajawal', sans-serif; font-size: 1.1rem; font-weight: bold;
+            cursor: pointer; transition: all 0.25s ease-in-out;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-submit:hover { background-color: #00acc1; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0, 188, 212, 0.4); }
+        #status-message { margin-top: 15px; font-size: 0.95rem; font-weight: bold; text-align: center; }
+        .status-success { color: #25D366; }
+        .status-error { color: #EA4335; }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 25px; color: #6A1B9A; text-decoration: none; font-weight: bold; font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <i class="fas fa-user-shield"></i>
+            <h1>لوحة تحكم الصيدلية</h1>
+            <p>إدارة البيانات وحالة العمل الحالية</p>
+        </div>
+
+        <div class="admin-body">
+            <form id="admin-form">
+
+                <!-- ===== كارد عدد الزيارات ===== -->
+                <div class="visits-card">
+                    <div class="visits-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="visits-info">
+                        <div class="visits-label">إجمالي زيارات الموقع</div>
+                        <div class="visits-number" id="visit-count">...</div>
+                        <div class="visits-sub">يُحدَّث تلقائياً مع كل زيارة</div>
+                    </div>
+                </div>
+
+                <!-- ===== قسم: البيانات الأساسية ===== -->
+                <p class="section-title">📋 البيانات الأساسية</p>
+
+                <div class="form-group">
+                    <label for="customers-input"><i class="fas fa-users" style="color:#6A1B9A; margin-left:6px;"></i> عدد العملاء الحالي:</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="customers-input" class="form-control" required min="0" placeholder="مثال: 2000">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tax-input"><i class="fas fa-file-invoice-dollar" style="color:#6A1B9A; margin-left:6px;"></i> رقم التسجيل الضريبي:</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="tax-input" class="form-control" required placeholder="أدخل رقم التسجيل">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <!-- ===== قسم: بيانات التواصل ===== -->
+                <p class="section-title">📞 بيانات التواصل</p>
+
+                <div class="form-group">
+                    <label for="phone-input"><i class="fas fa-phone" style="color:#6A1B9A; margin-left:6px;"></i> رقم الهاتف:</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="phone-input" class="form-control" placeholder="مثال: 01012345678">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="whatsapp-input"><i class="fab fa-whatsapp" style="color:#25D366; margin-left:6px;"></i> رابط واتساب:</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="whatsapp-input" class="form-control" placeholder="https://wa.me/20...">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="facebook-input"><i class="fab fa-facebook" style="color:#1877F2; margin-left:6px;"></i> رابط الفيسبوك:</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="facebook-input" class="form-control" placeholder="https://facebook.com/...">
+                        <i class="fab fa-facebook"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="instagram-input"><i class="fab fa-instagram" style="color:#dc2743; margin-left:6px;"></i> رابط إنستغرام:</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="instagram-input" class="form-control" placeholder="https://instagram.com/...">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="map-input"><i class="fas fa-map-marker-alt" style="color:#EA4335; margin-left:6px;"></i> رابط الخريطة:</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="map-input" class="form-control" placeholder="https://maps.google.com/...">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+
+                <!-- ===== قسم: حالة الصيدلية ===== -->
+                <p class="section-title">🟢 حالة الصيدلية</p>
+
+                <span class="status-section-label">الحالة الحالية على الموقع:</span>
+                <div class="status-toggle-card is-closed" id="status-card">
+                    <div class="status-card-inner">
+                        <div class="status-info">
+                            <div class="status-icon-circle">
+                                <i class="fas fa-store-slash" id="status-icon-fa"></i>
+                            </div>
+                            <div class="status-text-group">
+                                <div class="status-main-text" id="status-main-text">مغلق حالياً 🔴</div>
+                                <div class="status-sub-text" id="status-sub-text">اضغط الزر لفتح الصيدلية</div>
+                            </div>
+                        </div>
+                        <button type="button" class="big-toggle-btn" id="toggle-status-btn" onclick="toggleStatus()">
+                            <i class="fas fa-lock-open" id="toggle-icon"></i>
+                            <span id="toggle-label">فتح الآن</span>
+                        </button>
+                    </div>
+                    <div class="status-bar"></div>
+                </div>
+
+                <hr class="section-divider">
+
+                <!-- ===== قسم: كلمة المرور والحفظ ===== -->
+                <div class="form-group">
+                    <label for="password-input"><i class="fas fa-lock" style="color:#6A1B9A; margin-left:6px;"></i> كلمة المرور:</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password-input" class="form-control" required placeholder="أدخل كلمة المرور للحفظ">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-save"></i> حفظ وتحديث جميع البيانات
+                </button>
+            </form>
+
+            <div id="status-message"></div>
+
+            <center>
+                <a href="/index.html" class="back-link">
+                    <i class="fas fa-arrow-right"></i> العودة للموقع الرئيسي
+                </a>
+            </center>
+        </div>
+    </div>
+
+    <script>
+        const form          = document.getElementById('admin-form');
+        const customersInput = document.getElementById('customers-input');
+        const taxInput      = document.getElementById('tax-input');
+        const phoneInput    = document.getElementById('phone-input');
+        const whatsappInput = document.getElementById('whatsapp-input');
+        const facebookInput = document.getElementById('facebook-input');
+        const instagramInput= document.getElementById('instagram-input');
+        const mapInput      = document.getElementById('map-input');
+        const passwordInput = document.getElementById('password-input');
+        const statusMsg     = document.getElementById('status-message');
+
+        let isOpen = false;
+
+        function renderStatusCard() {
+            const card        = document.getElementById('status-card');
+            const mainText    = document.getElementById('status-main-text');
+            const subText     = document.getElementById('status-sub-text');
+            const iconEl      = document.getElementById('status-icon-fa');
+            const toggleIcon  = document.getElementById('toggle-icon');
+            const toggleLbl   = document.getElementById('toggle-label');
+
+            if (isOpen) {
+                card.className       = 'status-toggle-card is-open';
+                mainText.innerText   = 'مفتوح الآن 🟢';
+                subText.innerText    = 'اضغط الزر لإغلاق الصيدلية';
+                iconEl.className     = 'fas fa-store';
+                toggleIcon.className = 'fas fa-lock';
+                toggleLbl.innerText  = 'إغلاق الآن';
+            } else {
+                card.className       = 'status-toggle-card is-closed';
+                mainText.innerText   = 'مغلق حالياً 🔴';
+                subText.innerText    = 'اضغط الزر لفتح الصيدلية';
+                iconEl.className     = 'fas fa-store-slash';
+                toggleIcon.className = 'fas fa-lock-open';
+                toggleLbl.innerText  = 'فتح الآن';
+            }
+        }
+
+        function toggleStatus() {
+            isOpen = !isOpen;
+            renderStatusCard();
+        }
+
+        // جلب البيانات الحالية من السيرفر وملء الحقول
+        async function fetchCurrentData() {
+            try {
+                const response = await fetch('/api/data');
+                const data = await response.json();
+                if (data) {
+                    if (data.visitCount !== undefined)
+                        document.getElementById('visit-count').innerText = data.visitCount.toLocaleString('ar-EG');
+                    if (data.customerCount !== undefined) customersInput.value = data.customerCount;
+                    if (data.taxNumber)  taxInput.value      = data.taxNumber;
+                    if (data.phone)      phoneInput.value     = data.phone;
+                    if (data.whatsapp)   whatsappInput.value  = data.whatsapp;
+                    if (data.facebook)   facebookInput.value  = data.facebook;
+                    if (data.instagram)  instagramInput.value = data.instagram;
+                    if (data.mapLink)    mapInput.value       = data.mapLink;
+
+                    isOpen = (data.pharmacyStatus === "open");
+                    renderStatusCard();
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // إرسال البيانات
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            statusMsg.className = '';
+            statusMsg.innerText = 'جاري الحفظ ومزامنة البيانات...';
+
+            const password = passwordInput.value.trim();
+            if (!password) {
+                statusMsg.className = 'status-error';
+                statusMsg.innerHTML = '<i class="fas fa-exclamation-circle"></i> أدخل كلمة المرور أولاً.';
+                return;
+            }
+
+            const pharmacyStatus = isOpen ? "open" : "closed";
+
+            try {
+                const response = await fetch('/api/data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        password: password,
+                        newData: {
+                            customerCount: parseInt(customersInput.value) || 0,
+                            taxNumber:     taxInput.value,
+                            phone:         phoneInput.value,
+                            whatsapp:      whatsappInput.value,
+                            facebook:      facebookInput.value,
+                            instagram:     instagramInput.value,
+                            mapLink:       mapInput.value,
+                            pharmacyStatus: pharmacyStatus
+                        }
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    statusMsg.className = 'status-success';
+                    statusMsg.innerHTML = '<i class="fas fa-check-circle"></i> تم تحديث جميع البيانات بنجاح! ✅';
+                    passwordInput.value = '';
+                } else {
+                    statusMsg.className = 'status-error';
+                    statusMsg.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${result.message || 'فشل الحفظ.'}`;
+                }
+            } catch (error) {
+                statusMsg.className = 'status-error';
+                statusMsg.innerHTML = '<i class="fas fa-exclamation-circle"></i> حدث خطأ في الاتصال.';
+            }
+        });
+
+        window.onload = fetchCurrentData;
+    </script>
+</body>
+</html>

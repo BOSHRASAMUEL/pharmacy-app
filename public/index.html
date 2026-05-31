@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Mostafa Mazloum Pharmacy</title>
+    
+    <link rel="icon" type="image/png" href="img/Favicon.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: radial-gradient(circle at top right, #fdfbfb 0%, #ebedee 100%);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: space-between;
+            padding: 60px 20px 40px 20px;
+            position: relative;
+        }
+        
+        /* زر تغيير اللغة */
+        .lang-switch-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background-color: #6A1B9A;
+            color: white;
+            border: 2px solid #00BCD4;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Tajawal', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(106, 27, 154, 0.2);
+            z-index: 100;
+        }
+        .lang-switch-btn:hover {
+            background-color: #00BCD4;
+            color: #4A148C;
+            transform: translateY(-2px);
+        }
+
+        /* ========= LIVE STATUS BADGE ========= */
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            font-family: 'Tajawal', sans-serif;
+            z-index: 100;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+            cursor: default;
+            user-select: none;
+        }
+        .status-badge.open {
+            background-color: #e8fdf0;
+            color: #1a8040;
+            border: 2px solid #25D366;
+            box-shadow: 0 4px 14px rgba(37, 211, 102, 0.25);
+        }
+        .status-badge.closed {
+            background-color: #fdf0f0;
+            color: #9b1c1c;
+            border: 2px solid #EA4335;
+            box-shadow: 0 4px 14px rgba(234, 67, 53, 0.2);
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .status-badge.open .status-dot {
+            background-color: #25D366;
+            animation: pulse-green 1.8s infinite;
+        }
+        .status-badge.closed .status-dot {
+            background-color: #EA4335;
+        }
+        @keyframes pulse-green {
+            0%   { box-shadow: 0 0 0 0 rgba(37,211,102,0.6); }
+            70%  { box-shadow: 0 0 0 8px rgba(37,211,102,0); }
+            100% { box-shadow: 0 0 0 0 rgba(37,211,102,0); }
+        }
+        /* ====================================== */
+
+        .container {
+            background: #ffffff;
+            max-width: 850px;
+            width: 100%;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+        header {
+            margin-bottom: 35px;
+        }
+        .logo {
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: bounce 2s infinite alternate;
+            box-shadow: 0 10px 25px rgba(106, 27, 154, 0.2);
+        }
+        h1 {
+            color: #6A1B9A;
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .tagline {
+            font-size: 1.25rem;
+            color: #00BCD4;
+            font-weight: 500;
+            background: rgba(0, 188, 212, 0.08);
+            display: inline-block;
+            padding: 6px 20px;
+            border-radius: 50px;
+        }
+        .stats-section {
+            margin: 35px 0;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #6A1B9A 0%, #4A148C 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(106, 27, 154, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+            color: #00BCD4;
+        }
+        .stat-card h2 {
+            font-size: 3rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .stat-card p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .contact-section {
+            margin-top: 40px;
+        }
+        .contact-section h3 {
+            color: #6A1B9A;
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+            position: relative;
+            display: inline-block;
+        }
+        .contact-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 25%;
+            right: 25%;
+            height: 3px;
+            background: #00BCD4;
+            border-radius: 2px;
+        }
+        
+        .contact-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            direction: ltr;
+        }
+        
+        .contact-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: white;
+            text-decoration: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.25s ease-in-out;
+            border: none;
+        }
+        .contact-link i { font-size: 1.3rem; }
+
+        .btn-phone { background-color: #6A1B9A; box-shadow: 0 4px 12px rgba(106, 27, 154, 0.2); }
+        .btn-phone:hover { background-color: #511277; transform: translateY(-4px); box-shadow: 0 8px 20px rgba(106, 27, 154, 0.4); }
+
+        .btn-whatsapp { background-color: #25D366; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2); }
+        .btn-whatsapp:hover { background-color: #20ba5a; transform: translateY(-4px); box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4); }
+
+        .btn-facebook { background-color: #1877F2; box-shadow: 0 4px 12px rgba(24, 119, 242, 0.2); }
+        .btn-facebook:hover { background-color: #145dbf; transform: translateY(-4px); box-shadow: 0 8px 20px rgba(24, 119, 242, 0.4); }
+
+        .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); box-shadow: 0 4px 12px rgba(220, 39, 67, 0.2); }
+        .btn-instagram:hover { filter: brightness(1.1); transform: translateY(-4px); box-shadow: 0 8px 20px rgba(220, 39, 67, 0.4); }
+
+        .btn-maps { background-color: #EA4335; box-shadow: 0 4px 12px rgba(234, 67, 53, 0.2); }
+        .btn-maps:hover { background-color: #c53427; transform: translateY(-4px); box-shadow: 0 8px 20px rgba(234, 67, 53, 0.4); }
+
+        footer {
+            text-align: center;
+            padding: 25px 20px 0 20px;
+            width: 100%;
+            max-width: 850px;
+            border-top: 1px solid #dcdcdc;
+            color: #666;
+            margin-top: 40px;
+        }
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+        @media (max-width: 600px) {
+            .contact-links { grid-template-columns: 1fr; }
+            h1 { font-size: 1.9rem; }
+            .container { padding: 25px 20px; }
+            .lang-switch-btn { top: 10px; right: 10px; padding: 6px 12px; font-size: 0.85rem; }
+            .status-badge { top: 10px; left: 10px; padding: 6px 13px; font-size: 0.82rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <button id="lang-btn" class="lang-switch-btn" onclick="toggleLanguage()">العربية</button>
+
+    <!-- LIVE STATUS BADGE -->
+    <div id="status-badge" class="status-badge closed">
+        <span class="status-dot"></span>
+        <span id="status-text">...</span>
+    </div>
+
+    <div class="container">
+        <header>
+            <img src="img/logo.png" alt="Logo" class="logo">
+            <h1 id="main-title">Dr. Mostafa Mazloum Pharmacy</h1>
+            <p id="main-tagline" class="tagline">Your Health Matters</p>
+        </header>
+
+        <section class="stats-section">
+            <div class="stat-card">
+                <i class="fas fa-users icon"></i>
+                <h2 id="customer-counter" data-value="0">0+</h2>
+                <p id="counter-desc">Trusted customers in our area</p>
+            </div>
+        </section>
+
+        <section class="contact-section">
+            <h3 id="contact-title">Connect With Us</h3>
+            <div class="contact-links">
+                <a id="btn-phone" href="#" class="contact-link btn-phone"><i class="fas fa-phone"></i> <span id="text-phone">Call Us Now</span></a>
+                <a id="btn-whatsapp" href="#" target="_blank" class="contact-link btn-whatsapp"><i class="fab fa-whatsapp"></i> <span id="text-whatsapp">Message on WhatsApp</span></a>
+                <a id="btn-facebook" href="#" target="_blank" class="contact-link btn-facebook"><i class="fab fa-facebook"></i> <span id="text-facebook">Facebook Page</span></a>
+                <a id="btn-instagram" href="#" target="_blank" class="contact-link btn-instagram"><i class="fab fa-instagram"></i> <span id="text-instagram">Instagram Account</span></a>
+                <a id="btn-maps" href="#" target="_blank" class="contact-link btn-maps"><i class="fas fa-map-marker-alt"></i> <span id="text-maps">Our Location on Map</span></a>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p id="footer-copy" style="font-size: 0.95rem; margin-bottom: 6px;">All rights reserved © Dr. Mostafa Mazloum Pharmacy</p>
+        <p style="font-size: 0.95rem; font-weight: bold; color: #222;"><span id="tax-label">Tax Registration Number:</span> <span id="tax-number" data-value="...">...</span></p>
+        <p style="font-size: 0.82rem; margin-top: 8px;">
+            <a id="dev-credit" href="#" target="_blank"
+               style="color:#bbb; text-decoration:none; transition: color 0.2s;"
+               onmouseover="this.style.color='#6A1B9A'"
+               onmouseout="this.style.color='#bbb'">
+                <span id="dev-credit-text">Developed by Bisho</span>
+            </a>
+        </p>
+    </footer>
+
+    <script>
+        const dictionary = {
+            en: {
+                title: "Dr. Mostafa Mazloum Pharmacy",
+                tagline: "Your Health Matters",
+                counterDesc: "Trusted customers in our area",
+                contactTitle: "Connect With Us",
+                btnPhone: "Call Us Now",
+                btnWhatsapp: "Message on WhatsApp",
+                btnFacebook: "Facebook Page",
+                btnInstagram: "Instagram Account",
+                btnMaps: "Our Location on Map",
+                footerCopy: "All rights reserved © Dr. Mostafa Mazloum Pharmacy",
+                taxLabel: "Tax Registration Number:",
+                langBtn: "العربية",
+                statusOpen: "Open Now",
+                statusClosed: "Closed Now",
+                devCredit: "Developed by Bisho"
+            },
+            ar: {
+                title: "صيدلية د/ مصطفى مظلوم",
+                tagline: "صحتك تهمنا",
+                counterDesc: "عميل يثق بنا في منطقتنا",
+                contactTitle: "تواصل معنا",
+                btnPhone: "اتصل بنا فوراً",
+                btnWhatsapp: "مراسلة واتساب",
+                btnFacebook: "صفحة الفيسبوك",
+                btnInstagram: "حساب إنستغرام",
+                btnMaps: "موقعنا على الخريطة",
+                footerCopy: "جميع الحقوق محفوظة © صيدلية د/ مصطفى مظلوم",
+                taxLabel: "رقم التسجيل الضريبي:",
+                langBtn: "English",
+                statusOpen: "مفتوح الآن",
+                statusClosed: "مغلق حالياً",
+                devCredit: "تم التطوير بواسطة بيشوى"
+            }
+        };
+
+        let currentLang = localStorage.getItem('pharmacy_lang') || 'en';
+        let currentStatus = 'closed'; // يُحدَّث من الـ API
+
+        function formatNumberToLang(number, lang) {
+            if (isNaN(number)) return number;
+            const locale = lang === 'ar' ? 'ar-EG' : 'en-US';
+            return new Intl.NumberFormat(locale, { useGrouping: false }).format(number);
+        }
+
+        function updateStatusBadge(status) {
+            currentStatus = status;
+            const badge = document.getElementById('status-badge');
+            const statusText = document.getElementById('status-text');
+            if (status === 'open') {
+                badge.className = 'status-badge open';
+                statusText.innerText = dictionary[currentLang].statusOpen;
+            } else {
+                badge.className = 'status-badge closed';
+                statusText.innerText = dictionary[currentLang].statusClosed;
+            }
+        }
+
+        function applyLanguage(lang) {
+            const htmlTag = document.documentElement;
+            if (lang === 'ar') {
+                htmlTag.lang = 'ar';
+                htmlTag.dir = 'rtl';
+            } else {
+                htmlTag.lang = 'en';
+                htmlTag.dir = 'ltr';
+            }
+
+            document.title = dictionary[lang].title;
+            document.getElementById('main-title').innerText = dictionary[lang].title;
+            document.getElementById('main-tagline').innerText = dictionary[lang].tagline;
+            document.getElementById('counter-desc').innerText = dictionary[lang].counterDesc;
+            document.getElementById('contact-title').innerText = dictionary[lang].contactTitle;
+            document.getElementById('footer-copy').innerText = dictionary[lang].footerCopy;
+            document.getElementById('tax-label').innerText = dictionary[lang].taxLabel;
+            document.getElementById('lang-btn').innerText = dictionary[lang].langBtn;
+            document.getElementById('text-phone').innerText = dictionary[lang].btnPhone;
+            document.getElementById('text-whatsapp').innerText = dictionary[lang].btnWhatsapp;
+            document.getElementById('text-facebook').innerText = dictionary[lang].btnFacebook;
+            document.getElementById('text-instagram').innerText = dictionary[lang].btnInstagram;
+            document.getElementById('text-maps').innerText = dictionary[lang].btnMaps;
+
+            // تحديث نص المطور
+            document.getElementById('dev-credit-text').innerText = dictionary[lang].devCredit;
+
+            // تحديث نص البادج بناءً على اللغة الحالية
+            updateStatusBadge(currentStatus);
+
+            const counterEl = document.getElementById('customer-counter');
+            const taxEl = document.getElementById('tax-number');
+            if (counterEl.getAttribute('data-value') !== "0") {
+                counterEl.innerText = formatNumberToLang(counterEl.getAttribute('data-value'), lang) + '+';
+            }
+            if (taxEl.getAttribute('data-value') !== "...") {
+                taxEl.innerText = formatNumberToLang(taxEl.getAttribute('data-value'), lang);
+            }
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'ar' : 'en';
+            localStorage.setItem('pharmacy_lang', currentLang);
+            applyLanguage(currentLang);
+        }
+
+        async function loadStats() {
+            applyLanguage(currentLang);
+
+            try {
+                const response = await fetch('/api/data');
+                const data = await response.json();
+
+                // تحديث حالة الصيدلية
+                updateStatusBadge(data.pharmacyStatus || 'closed');
+
+                // رابط بيشوى من data.json
+                if (data.devLink) {
+                    document.getElementById('dev-credit').href = data.devLink;
+                }
+
+                const taxEl = document.getElementById('tax-number');
+                const taxNumValue = data.taxNumber || '---';
+                taxEl.setAttribute('data-value', taxNumValue);
+                taxEl.innerText = formatNumberToLang(taxNumValue, currentLang);
+
+                document.getElementById('btn-phone').href = `tel:${data.phone}`;
+                document.getElementById('btn-whatsapp').href = data.whatsapp;
+                document.getElementById('btn-facebook').href = data.facebook;
+                document.getElementById('btn-instagram').href = data.instagram;
+                document.getElementById('btn-maps').href = data.mapLink;
+
+                const targetNumber = data.customerCount || 2000;
+                const counterEl = document.getElementById('customer-counter');
+                let current = 0;
+                const duration = 1800;
+                const stepTime = Math.max(Math.floor(duration / targetNumber), 12);
+                const steps = duration / stepTime;
+                const increment = targetNumber / steps;
+
+                const timer = setInterval(() => {
+                    current += increment;
+                    let displayValue = Math.floor(current);
+                    if (current >= targetNumber) {
+                        displayValue = Math.floor(targetNumber);
+                        clearInterval(timer);
+                    }
+                    counterEl.setAttribute('data-value', displayValue);
+                    counterEl.innerText = formatNumberToLang(displayValue, currentLang) + '+';
+                }, stepTime);
+
+            } catch (error) {
+                console.log("Error loading stats:", error);
+                const counterEl = document.getElementById('customer-counter');
+                counterEl.setAttribute('data-value', 2000);
+                counterEl.innerText = formatNumberToLang(2000, currentLang) + '+';
+            }
+        }
+
+        window.onload = loadStats;
+    </script>
+</body>
+</html>
